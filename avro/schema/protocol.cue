@@ -1,12 +1,12 @@
 package schema
 
 Protocol :: {
-	protocol: string
+	protocol:   string
 	namespace?: string
-	doc?: string
+	doc?:       string
 	types: [... Schema]
-	messages: {
-		<name>: Message
+	messages?: {
+		[string]: Message
 	}
 }
 

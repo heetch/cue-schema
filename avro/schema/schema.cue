@@ -75,7 +75,7 @@ LogicalType :: {
 LogicalType :: DecimalBytes | DecimalFixed | UUID | Date | TimeMillis | TimeMicros | TimestampMillis | TimestampMicros
 
 DecimalBytes :: {
-	type: "bytes"
+	type:        "bytes"
 	logicalType: "decimal"
 	precision:   >0
 	scale?:      *0 | (>=0 & <=precision)

@@ -1,5 +1,46 @@
 package schema
 
+anyType: Schema & [
+	"bytes",
+	"null",
+	"boolean",
+	"double",
+	"string",
+	{
+		type: "map"
+		values: ["anyType"]
+	},
+	{
+		type: "array"
+		items: ["anyType"]
+	},
+]
+
+heetchEventSchema: Schema & {
+	type:    "record"
+	name:    "CloudEvent"
+	doc:     "Avro Event Format for Heetch Events"
+	fields: [
+		{
+			name: "attribute"
+			type: {
+				type: "map"
+				values: ["null", "boolean", "int", "string", "bytes"]
+			}
+		},
+		{
+			name: "data"
+			type: anyType
+		}
+	]
+}
+
+exampleHeetchEvent: Protocol & {
+	namespace: "com.heetch"
+	protocol: "heetch"
+	types: [heetchEventSchema]
+}
+
 exampleProtocol: Protocol & {
 	namespace: "com.acme"
 	protocol:  "HelloWorld"
@@ -11,9 +52,9 @@ exampleProtocol: Protocol & {
 	}, {
 		name: "Curse"
 		type: "record"
-		fields: [{name: "message",type: "string"}]
+		fields: [{name: "message", type: "string"}]
 	}]
-	messages hello: {
+	messages: hello: {
 		doc: "Say hello."
 		request: [{name: "greeting", type: "Greeting"}]
 		response: "Greeting"
