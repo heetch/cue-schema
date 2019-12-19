@@ -1,7 +1,10 @@
-package schema
+package avro
 
 // Schema represents an Avro schema.
-Schema :: TypeName | Union | Record | Enum | Map | Array | Fixed | LogicalType
+// Note: we use defaults for all alternatives except LogicalType
+// so that they take precedence over LogicalType which overlaps with
+// other types.
+Schema :: *TypeName | *Union | *Record | *Enum | *Map | *Array | *Fixed | LogicalType
 
 Name :: =~#"^([A-Za-z_][A-Za-z0-9_]*)(\.([A-Za-z_][A-Za-z0-9_]*))*$"#
 
@@ -12,14 +15,20 @@ DefinedType :: string
 
 PrimitiveType :: "null" | "boolean" | "int" | "long" | "float" | "double" | "bytes" | "string"
 
-Union: [... Schema]
+Union :: [... Schema]
 
-Record :: Schema & {
-	type:       "record"
+Definition :: {
+	type: string
 	name:       DefinedType
-	namespace?: string
+	namespace?: =~#"^([A-Za-z_][A-Za-z0-9_]*)(\.([A-Za-z_][A-Za-z0-9_]*))*"#
+	aliases?: [...string]
+	doc?: string
+}
+
+Record :: {
+	Definition
+	type:       "record"
 	doc?:       string
-	aliases?: [... DefinedType]
 	fields: [... Field]
 }
 
@@ -32,47 +41,37 @@ Field :: {
 	aliases?: [... DefinedType]
 }
 
-FullTypedef :: {
+Fixed :: {
+	Definition
+	type:       "fixed"
 	name:       DefinedType
-	namespace?: =~#"^([A-Za-z_][A-Za-z0-9_]*)(\.([A-Za-z_][A-Za-z0-9_]*))*"#
-	aliases?: [...string]
-	doc?: string
-	...
+	size: int
 }
 
-Enum :: FullTypedef & {
+Enum :: {
+	Definition
 	type:       "enum"
 	name:       string
-	namespace?: string
-	aliases?: [...string]
-	doc?: string
 	symbols: [... Name]
 	default?: Name // & strings.Contains(symbols)
 }
 
-Array :: Schema & {
+Array :: {
 	type:  "array"
 	items: Schema
 }
 
-Map :: Schema & {
+Map :: {
 	type:   "map"
 	values: Schema
-}
-
-Fixed :: FullTypedef & {
-	type:       "fixed"
-	name:       DefinedType
-	namespace?: string
-	aliases?: [... DefinedType]
-	size: int
 }
 
 LogicalType :: {
 	Schema
 	logicalType: string
 }
-LogicalType :: DecimalBytes | DecimalFixed | UUID | Date | TimeMillis | TimeMicros | TimestampMillis | TimestampMicros
+
+LogicalType :: DecimalBytes | DecimalFixed | UUID | Date | *TimeMillis | *TimeMicros | TimestampMillis | TimestampMicros
 
 DecimalBytes :: {
 	type:        "bytes"
@@ -118,10 +117,4 @@ TimestampMillis :: {
 TimestampMicros :: {
 	type:        "long"
 	logicalType: "timestamp-micros"
-}
-
-TimestampDuration :: {
-	type:        "fixed"
-	logicalType: "duration"
-	size:        12
 }

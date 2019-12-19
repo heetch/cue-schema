@@ -1,4 +1,4 @@
-package schema
+package avro
 
 Protocol :: {
 	protocol:   string
@@ -15,7 +15,7 @@ Message :: {
 	request: [... Field]
 	response: Schema
 	errors?: [... Schema]
-	if response == "null" {
+	if (response & "null") != _|_ {
 		"one-way"?: bool
 	}
 }

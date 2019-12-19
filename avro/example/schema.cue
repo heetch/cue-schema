@@ -1,12 +1,56 @@
-package schema
+package example
+import (
+	"github.com/heetch/cue-schema/avro"
+)
 
-anyType: Schema & [
-	"bytes",
-	"null",
-	"boolean",
-	"double",
-	"string",
-	{
+cloudEvent: avro.Schema & {
+	type:      "record"
+	name:      "SomeEvent"
+	namespace: "foo.bar"
+	fields: [{
+		name: "Metadata"
+		type: {
+			type:      "record"
+			name:      "Metadata"
+			namespace: "avro.apache.org"
+			fields: [{
+				name: "id"
+				type: "string"
+			}, {
+				name: "source"
+				type: "string"
+			}, {
+				"name": "time"
+				"type": {
+					type:          "long"
+					"logicalType": "timestamp-micros"
+				}
+			}]
+		}
+	}, {
+		name: "other"
+		type: "string"
+	}]
+}
+
+fixedType: avro.Schema & {
+	type: "fixed"
+	name: "five"
+	size: 5
+}
+
+locicalType: avro.Schema & {
+	type:        "long"
+	logicalType: "timestamp-micros"
+}
+
+anyType: avro.Schema & [
+		"bytes",
+		"null",
+		"boolean",
+		"double",
+		"string",
+		{
 		type: "map"
 		values: ["anyType"]
 	},
@@ -16,10 +60,10 @@ anyType: Schema & [
 	},
 ]
 
-heetchEventSchema: Schema & {
-	type:    "record"
-	name:    "CloudEvent"
-	doc:     "Avro Event Format for Heetch Events"
+heetchEventSchema: avro.Schema & {
+	type: "record"
+	name: "CloudEvent"
+	doc:  "Avro Event Format for Heetch Events"
 	fields: [
 		{
 			name: "attribute"
@@ -31,17 +75,17 @@ heetchEventSchema: Schema & {
 		{
 			name: "data"
 			type: anyType
-		}
+		},
 	]
 }
 
-exampleHeetchEvent: Protocol & {
+exampleHeetchEvent: avro.Protocol & {
 	namespace: "com.heetch"
-	protocol: "heetch"
+	protocol:  "heetch"
 	types: [heetchEventSchema]
 }
 
-exampleProtocol: Protocol & {
+exampleProtocol: avro.Protocol & {
 	namespace: "com.acme"
 	protocol:  "HelloWorld"
 	doc:       "Protocol Greetings"
@@ -62,7 +106,7 @@ exampleProtocol: Protocol & {
 	}
 }
 
-exampleTODOApp : Schema & {
+exampleTODOApp : avro.Schema & {
 	type:      "record"
 	name:      "User"
 	namespace: "com.example.avro"
