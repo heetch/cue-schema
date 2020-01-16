@@ -60,7 +60,7 @@ Services :: [... string]
 
 // ServiceConfig holds the default configuration for services that
 // can be started by naming them in Services.
-ServiceConfig :: [_]: Service
+ServiceConfig :: [_]: _
 
 ServiceConfig :: kafka: {
 	image: "confluentinc/cp-kafka:latest"

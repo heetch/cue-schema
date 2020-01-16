@@ -3,8 +3,6 @@ import (
 	goworkflow "github.com/heetch/cue-schema/github/workflow/go:workflow"
 )
 
-w: Workflow
-
 Workflow :: goworkflow
 Workflow :: {
 	name: "My CI caboodle"
