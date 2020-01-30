@@ -1,6 +1,11 @@
 // Package workflow describes the contents of a file in the
 // .github/workflows directory of a repository.
+//
+// This follows the API described here:
+// https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
 package workflow
+
+// TODO cross-verify against https://github.com/SchemaStore/schemastore/blob/master/src/schemas/json/github-workflow.json
 
 import "regexp"
 
@@ -24,7 +29,7 @@ Job :: {
 	name?: string
 	// TODO restrict JobID to names mentioned in the workflow jobs?
 	needs?:     JobID | [...JobID]
-	"runs-on"?: string
+	"runs-on"?: string | [string, ...string]
 	env?:       Env
 	if?:        Condition
 	steps?: [... JobStep]

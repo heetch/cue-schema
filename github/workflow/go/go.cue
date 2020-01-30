@@ -18,6 +18,14 @@ jobs: test: {
 		uses: "actions/setup-go@v1"
 		with: "go-version": "${{ matrix.go-version }}"
 	}, {
+		name: "Module cache",
+		uses: "actions/cache@v1"
+		with: {
+			path: "~/go/pkg/mod"
+			key: "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}"
+			restore-keys: "${{ runner.os }}-go-"
+		}
+	}, {
 		name: "Checkout code"
 		uses: "actions/checkout@v1"
 	}, _ | *{
