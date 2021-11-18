@@ -71,7 +71,7 @@ LogicalType :: {
 	logicalType: string
 }
 
-LogicalType :: DecimalBytes | DecimalFixed | UUID | Date | *TimeMillis | *TimeMicros | TimestampMillis | TimestampMicros
+LogicalType :: DecimalBytes | DecimalFixed | UUID | Date | *TimeMillis | *TimeMicros | TimestampMillis | TimestampMicros | DurationNanos
 
 DecimalBytes :: {
 	type:        "bytes"
@@ -117,4 +117,9 @@ TimestampMillis :: {
 TimestampMicros :: {
 	type:        "long"
 	logicalType: "timestamp-micros"
+}
+
+DurationNanos :: {
+	type:        "long"
+	logicalType: "duration-nanos"
 }
